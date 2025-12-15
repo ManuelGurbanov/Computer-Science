@@ -1,0 +1,27 @@
+APRETÁ CONTROL + Z y te hace saltos de linea para leer cómodo
+
+bloques es una lista de bloque.
+
+bloque tiene una propiedad bloque.transacciones que es un heap.
+Eso nos permite devolver la mayor transacción con O(1).
+También permite eliminar la mayor transacción con O(log nb).
+
+usuarios es un heap cuya raíz es el usuario con mejor saldo.
+
+¿Qué problemas tiene esto?
+
+Cuando agregamos un bloque, recibimos un bloque cuyas transacciones están ordenadas por ID. Pasarlas a heap cuesta O(n) y está ok, pero hay que actualizar los montos, acá el problema.
+Los usuarios son un heap, y acceder a cada nodo del heap es caro. Por eso implementamos un handle en el heap de usuarios: asi los actualizamos rápido.
+
+Por otro lado, cuando hackeamos, la última transacción elimina la transacción de mayor monto. Esto es desencolar la última posición de bloque.transacciones, que es barato.
+Pero hay que actualizar el monto, así que nuevamente necesitamos el handle del heap de usuarios.
+
+A su vez, la clase Bloque tiene una propiedad bloque.txPorID.
+La misma guarda el bloque ordenado por ID, que cuesta O(nb) porque el enunciado nos lo da ya ordenado, entonces solo hay que copiarlo, NO ordenarlo.
+Teniendo esto en cuenta: el ítem 4) pide el último bloque de la secuencia bloques ordenado por ID, entonces retornamos esta propiedad bloque.txPorID y es O(1).
+
+Sin embargo, cuando hackeamos, hay que eliminar la transacción del ID que eliminamos.
+Es caro buscar un nodo de una lista enlazada, por lo que también le debemos agregar un handle.
+
+En resumen: hay que crear el heap y agregarle un handle.
+Luego, hay que copiar el código de lista enlazada del taller y también agregarle un handle.
